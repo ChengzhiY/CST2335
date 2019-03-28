@@ -10,13 +10,13 @@ import android.util.Log;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    private static final String DB_NAME = "MessagesDB";
-    private static final String DB_TABLE = "Messages_Table";
+    public static final String DB_NAME = "MessagesDB";
+    public static final String DB_TABLE = "Messages_Table";
 
     //columns
-    private static final String COL_MESSAGE = "Message";
-    private static final String COL_ISSEND = "IsSend";
-    private static final String COL_MESSAGEID = "MessageID";
+    public static final String COL_MESSAGE = "Message";
+    public static final String COL_ISSEND = "IsSend";
+    public static final String COL_MESSAGEID = "MessageID";
 
     //queries
     private static final String CREATE_TABLE = "CREATE TABLE "+DB_TABLE+" ("+COL_MESSAGEID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+COL_MESSAGE+" TEXT, "+COL_ISSEND+" BIT);";
@@ -37,7 +37,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     //insert data
-    public boolean insertData(String message, boolean isSend) {
+    public long insertData(String message, boolean isSend) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COL_MESSAGE, message);
@@ -48,7 +48,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         long result = db.insert(DB_TABLE, null, contentValues);
 
-        return result != -1; //if result = -1 data doesn't insert
+        return result ; //if result = -1 data doesn't insert
+    }
+
+    // method to delete a Record
+    public int deleteEntry(int id)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String where="MessageID=?";
+        int numberOFEntriesDeleted= db.delete(DB_TABLE, where, new String[]{Integer.toString(id)});
+        return numberOFEntriesDeleted;
     }
 
     //view data
